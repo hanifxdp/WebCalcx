@@ -1,4 +1,4 @@
-# Columnar & Diagonal Cipher - Cryptography
+# Columnar & Diagonal Cipher
 
 ## Columnar Cipher
 
@@ -25,12 +25,12 @@ Maka,
 PT :
 ikan_hiu_makan_tomat
 
----
-
 ## Diagonal Cipher
+
 Menyusun plaintext pada kolom dengan pola diagonal.
 
 ### Contoh
+
 PT : belajaralgoritmakriptografi
 K : 6
 
@@ -38,4 +38,3 @@ K : 6
 
 Maka,
 CT : berlaialtijgmpaaoatfxrkoixrxxxxx
-
