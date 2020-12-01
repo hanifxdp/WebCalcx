@@ -11,138 +11,137 @@
 <?php
 class Pair
 {
-	public $Key;
-	public $Value;
+  public $Key;
+  public $Value;
 }
 
-function compare($val1, $val2) {
-	return strcmp($val1->Value, $val2->Value);
+function compare($val1, $val2)
+{
+  return strcmp($val1->Value, $val2->Value);
 }
 
 function ShiftIndexes($key)
 {
-	$lenOfkey = strlen($key);
-	$indexes = array();
-	$sortedarray = array();
-    //make a pair using the key 
-	for ($i = 0; $i < $lenOfkey; ++$i) {
-		$pair = new Pair();
-		$pair->Key = $i;
-		$pair->Value = $key[$i];
-		$sortedarray[] = $pair;
-	}
-    //sort Sortedarray 
-	usort($sortedarray, 'compare');
+  $lenOfkey = strlen($key);
+  $indexes = array();
+  $sortedarray = array();
+  //make a pair using the key 
+  for ($i = 0; $i < $lenOfkey; ++$i) {
+    $pair = new Pair();
+    $pair->Key = $i;
+    $pair->Value = $key[$i];
+    $sortedarray[] = $pair;
+  }
+  //sort Sortedarray 
+  usort($sortedarray, 'compare');
 
-    // return thr postions of the sorted key 
-	for ($i = 0; $i < $lenOfkey; ++$i)
-		$indexes[$sortedarray[$i]->Key] = $i;
+  // return thr postions of the sorted key 
+  for ($i = 0; $i < $lenOfkey; ++$i)
+    $indexes[$sortedarray[$i]->Key] = $i;
 
-	return $indexes;
+  return $indexes;
 }
 
 function Encrypt2($text, $key)
 {
-	$lenoftext = strlen($text);
-	$lenOfkey = strlen($key);
-	// adjust the text replace every space with (-)
-	$text = ($lenoftext % $lenOfkey == 0) ? $text : str_pad($text, $lenoftext - ($lenoftext % $lenOfkey) + $lenOfkey,"-", STR_PAD_RIGHT);
-	$lenoftext = strlen($text);
-	$numofcols = $lenOfkey;
-	$numofrows = ceil($lenoftext / $numofcols);
-	$rowmatrix1 = array(array());
-	$colmatrix2 = array(array());
-	$sortedcolmatrix2 = array(array());
-	$shiftIndexes = ShiftIndexes($key);
+  $lenoftext = strlen($text);
+  $lenOfkey = strlen($key);
+  // adjust the text replace every space with (-)
+  $text = ($lenoftext % $lenOfkey == 0) ? $text : str_pad($text, $lenoftext - ($lenoftext % $lenOfkey) + $lenOfkey, "-", STR_PAD_RIGHT);
+  $lenoftext = strlen($text);
+  $numofcols = $lenOfkey;
+  $numofrows = ceil($lenoftext / $numofcols);
+  $rowmatrix1 = array(array());
+  $colmatrix2 = array(array());
+  $sortedcolmatrix2 = array(array());
+  $shiftIndexes = ShiftIndexes($key);
 
-	for ($i = 0; $i < $lenoftext; ++$i)
-	{
-		$currentRow = $i / $numofcols;
-		$currentColumn = $i % $numofcols;
-		$rowmatrix1[$currentRow][$currentColumn] = $text[$i];
-	}
+  for ($i = 0; $i < $lenoftext; ++$i) {
+    $currentRow = $i / $numofcols;
+    $currentColumn = $i % $numofcols;
+    $rowmatrix1[$currentRow][$currentColumn] = $text[$i];
+  }
 
-	for ($i = 0; $i < $numofrows; $i++)
-	{
-		for ($j = 0; $j < $numofcols; $j++)
-		{
-			$colmatrix2[$j][$i] = $rowmatrix1[$i][$j];
-		}
-	}
-	for ($i = 0; $i < $numofcols; $i++)
-	{
-		for ($j = 0; $j < $numofrows; $j++)
-		{
-			$sortedcolmatrix2[$shiftIndexes[$i]][$j] = $colmatrix2[$i][$j];
-		}
-	}
-	$ciphertext="";
-	for ($i = 0; $i < $lenoftext; $i++)
-	{
-		$currentRow = $i / $numofrows;
-		$currentColumn = $i % $numofrows;
-		$ciphertext .= $sortedcolmatrix2[$currentRow][$currentColumn];
-	}
+  for ($i = 0; $i < $numofrows; $i++) {
+    for ($j = 0; $j < $numofcols; $j++) {
+      $colmatrix2[$j][$i] = $rowmatrix1[$i][$j];
+    }
+  }
+  for ($i = 0; $i < $numofcols; $i++) {
+    for ($j = 0; $j < $numofrows; $j++) {
+      $sortedcolmatrix2[$shiftIndexes[$i]][$j] = $colmatrix2[$i][$j];
+    }
+  }
+  $ciphertext = "";
+  for ($i = 0; $i < $lenoftext; $i++) {
+    $currentRow = $i / $numofrows;
+    $currentColumn = $i % $numofrows;
+    $ciphertext .= $sortedcolmatrix2[$currentRow][$currentColumn];
+  }
 
-	return $ciphertext;
+  return $ciphertext;
 }
 
 function Decrypt2($text, $key)
 {
-	
-	$lenOfkey = strlen($key);
-	$lenoftext = strlen($text);
-	$numofcols = ceil($lenoftext / $lenOfkey);
-	$numofrows = $lenOfkey;
-	$rowmatrix1 = array(array());
-	$colmatrix2 = array(array());
-	$unsortedcolmatrix2 = array(array());
-	$shiftIndexes = ShiftIndexes($key);
 
-	for ($i = 0; $i < $lenoftext; ++$i)
-	{
-		$currentRow = $i / $numofcols;
-		$currentColumn = $i % $numofcols;
-		$rowmatrix1[$currentRow][$currentColumn] = $text[$i];
-	}
+  $lenOfkey = strlen($key);
+  $lenoftext = strlen($text);
+  $numofcols = ceil($lenoftext / $lenOfkey);
+  $numofrows = $lenOfkey;
+  $rowmatrix1 = array(array());
+  $colmatrix2 = array(array());
+  $unsortedcolmatrix2 = array(array());
+  $shiftIndexes = ShiftIndexes($key);
 
-	for ($i = 0; $i < $numofrows; $i++)
-	{
-		for ($j = 0; $j < $numofcols; $j++)
-		{
-			$colmatrix2[$j][$i] = $rowmatrix1[$i][$j];
-		}
-	}
-	
-	for ($i = 0; $i < $numofcols; $i++)
-	{
-		for ($j = 0; $j < $numofrows; $j++)
-		{
-			$unsortedcolmatrix2[$i][$j] = $colmatrix2[$i][$shiftIndexes[$j]];
-		}
-	}
-    $plaintext = "";
-	for ($i = 0; $i < $lenoftext; $i++)
-	{
-		$currentRow = $i / $numofrows;
-		$currentColumn = $i % $numofrows;
-		$plaintext .= $unsortedcolmatrix2[$currentRow][$currentColumn];
-	}
+  for ($i = 0; $i < $lenoftext; ++$i) {
+    $currentRow = $i / $numofcols;
+    $currentColumn = $i % $numofcols;
+    $rowmatrix1[$currentRow][$currentColumn] = $text[$i];
+  }
 
-	return $plaintext;
+  for ($i = 0; $i < $numofrows; $i++) {
+    for ($j = 0; $j < $numofcols; $j++) {
+      $colmatrix2[$j][$i] = $rowmatrix1[$i][$j];
+    }
+  }
+
+  for ($i = 0; $i < $numofcols; $i++) {
+    for ($j = 0; $j < $numofrows; $j++) {
+      $unsortedcolmatrix2[$i][$j] = $colmatrix2[$i][$shiftIndexes[$j]];
+    }
+  }
+  $plaintext = "";
+  for ($i = 0; $i < $lenoftext; $i++) {
+    $currentRow = $i / $numofrows;
+    $currentColumn = $i % $numofrows;
+    $plaintext .= $unsortedcolmatrix2[$currentRow][$currentColumn];
+  }
+
+  return $plaintext;
 }
 
 
-if ($t < "20") {
-  echo "Have a good day!";
+extract($_POST);
+if (isset($save)) {
+  switch ($exampleRadios) {
+    case '1':
+      $hasil = Encrypt2($teks, $kunci);
+      break;
+
+    case '2':
+      $hasil = Decrypt2(Encrypt2($tex, $kunci), $kunci);
+      break;
+  }
 }
 
-echo"Sample for DoubleTranspostions<br>";
-$x=Encrypt2("Hello from the other world","hi");
-$enkripsi=Encrypt2($text)
-echo"$x<br>";
-$x=Decrypt2(Encrypt2("Hello from the other world","hi"),"hi");
-echo"$x<br>";
+
+//echo"Sample for DoubleTranspostions<br>";
+//$x=Encrypt2("Hello from the other world","hi");
+//$enkripsi=Encrypt2($text)
+//echo"$x<br>";
+//$x=Decrypt2(Encrypt2("Hello from the other world","hi"),"hi");
+//echo"$x<br>";
 ?>
 
 <body>
@@ -175,28 +174,28 @@ echo"$x<br>";
         <form method="POST">
           <div class="form-group">
             <label for="plaintext-ciphertext">Plaintext/Ciphertext</label>
-            <input type="text" class="form-control" id="plaintext-ciphertext" aria-describedby="texthelp" value="<?php echo @$text; ?>" />
+            <input type="text" class="form-control" id="plaintext-ciphertext" aria-describedby="texthelp" name="teks" value="<?php echo @$text; ?>" />
             <small id="texthelp" class="form-text text-muted">Insert PT/CT.</small>
           </div>
           <div class="form-group">
             <label for="keygen">Key</label>
-            <input type="text" class="form-control" id="keygen" aria-describedby="keygenhelp" value="<?php echo @$key; ?>" />
+            <input type="text" class="form-control" id="keygen" aria-describedby="keygenhelp" name="kunci" value="<?php echo @$key; ?>" />
             <small id=" keygenhelp" class="form-text text-muted">Insert Key.</small>
           </div>
         </form>
         <div class="form-check">
-          <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="<?php echo @option1;?>" checked />
+          <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="1" checked />
           <label class="form-check-label" for="exampleRadios1">
             Encrypt
           </label>
         </div>
         <div class="form-check mb-3">
-          <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="<?php echo @option2;?>" />
+          <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="2" />
           <label class="form-check-label" for="exampleRadios2">
             Decrypt
           </label>
         </div>
-        <button type="submit" class="btn btn-primary">Go!</button>
+        <button type="submit" name="save" class="btn btn-primary">Go!</button>
       </div>
 
     </div>
@@ -206,7 +205,7 @@ echo"$x<br>";
         <form>
           <div class="form-group">
             <label for="result">Ciphertext/Plaintext</label>
-            <input type="text" class="form-control" id="result" value="<?php echo @$hasil;?>" disabled="disabled" readonly="readonly" aria-describedby="resulthelp">
+            <input type="text" class="form-control" id="result" value="<?php echo @$hasil; ?>" disabled="disabled" readonly="readonly" aria-describedby="resulthelp">
             <small id="resulthelp" class="form-text text-muted">Result here!</small>
           </div>
         </form>
