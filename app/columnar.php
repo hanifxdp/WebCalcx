@@ -184,7 +184,7 @@ echo"$x<br>";
             <small id=" keygenhelp" class="form-text text-muted">Insert Key.</small>
           </div>
         </form>
-        <div class="form-check">
+        <!-- <div class="form-check">
           <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="<?php echo @option1;?>" checked />
           <label class="form-check-label" for="exampleRadios1">
             Encrypt
@@ -195,7 +195,13 @@ echo"$x<br>";
           <label class="form-check-label" for="exampleRadios2">
             Decrypt
           </label>
-        </div>
+		</div> -->
+		<label for="dropdown-menu">Method</label>
+		<select class="custom-select custom-select-sm mb-4">
+			<option selected>Method</option>
+			<option value="1">Encrypt</option>
+			<option value="2">Decrypt</option>
+		</select>
         <button type="submit" class="btn btn-primary">Go!</button>
       </div>
 
