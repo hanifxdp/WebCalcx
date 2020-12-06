@@ -122,12 +122,14 @@
     return $plaintext;
   }
 
+  $hasil = "";
+  if (isset($_POST['submit'])) {
+    $teks  = $_POST["teks"];
+    $kunci  = $_POST["kunci"];
 
-
-  if (isset($_GET['submit'])) {
-    $teks = $_GET['teks'];
-    $kunci = $_GET['kunci'];
-    $operator = $_GET['operator'];
+    // $teks = $_GET['teks'];
+    // $kunci = $_GET['kunci'];
+    $operator = $_POST['operator'];
 
     switch ($operator) {
       case "Encrypt":
@@ -141,6 +143,8 @@
         break;
     }
   }
+
+
 
   ?>
 
@@ -170,7 +174,7 @@
     </div>
     <div class="row">
       <div class="col-md-6">
-        <form action="" method="GET">
+        <form action="" method="POST">
           <div class="form-group">
             <label for="plaintext-ciphertext">Plaintext/Ciphertext</label>
             <input type="text" class="form-control" name="teks" />
@@ -182,22 +186,6 @@
             <small id=" keygenhelp" class="form-text text-muted">Insert Key.</small>
           </div>
 
-          <!-- <div class="form-check">
-          <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="1" checked /> -->
-          <!-- <div class="form-check">
-          <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value=" checked />
-          <label class="form-check-label" for="exampleRadios1">
-            Encrypt
-          </label>
-        </div>
-        <div class="form-check mb-3">
-          <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="2" />
-          <label class="form-check-label" for="exampleRadios2">
-            Decrypt
-          </label>
-        </div>
-        <button type="submit" name="save" class="btn btn-primary">Go!</button>
-		</div> -->
           <label for="dropdown-menu">Method</label>
           <select name="operator" class="custom-select custom-select-sm mb-4">
             <option selected>Method</option>
@@ -212,16 +200,15 @@
       <div class="col-md-6">
         <h2 class="mb-3">Result</h2>
 
+        </form>
         <div class="form-group">
           <label for="result">Ciphertext/Plaintext</label>
-          <input type="text" class="form-control" placeholder="<?php echo $hasil; ?>" readonly aria-describedby="resulthelp">
-          <small id="resulthelp" class="form-text text-muted">Result here!</small>
+          <input type="text" class="form-control" value="<?php echo $hasil ?>" readonly>
+          <small id=" resulthelp" class="form-text text-muted">Result here!</small>
         </div>
-        </form>
       </div>
     </div>
   </div>
-
 
 </body>
 
